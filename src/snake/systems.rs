@@ -1,22 +1,36 @@
 use bevy::prelude::*;
 
-use crate::snake::components::*;
+use crate::{grid::{components::*, Grid}, snake::components::*};
 
 
 pub fn grow_head(
-    heads: Query<&Head>,
-    bodys: Query<&Body>,
+    heads: Query<(Entity, &Head, &GridPos, &GlobalDirection)>,
+    grid: Res<Grid>,
     mut commands: Commands
 ) {
-    for head in &heads {
-        // head.next
+    let size = grid.size;
+
+    for (entity, head, pos, dir) in &heads {
+        let new_pos = pos.shift(dir, size);
+        let new_body = commands.spawn((
+            Body { prev: entity, next: head.next },
+            *pos,
+            *dir,
+        )).id();
+        commands.entity(entity).insert((Head { next: new_body }, new_pos));
     }
 }
 
 pub fn shrink_tail(
-    tails: Query<&Tail>,
+    tails: Query<(Entity, &Tail)>,
     bodys: Query<&Body>,
     mut commands: Commands
 ) {
-    
+    for (entity, tail) in &tails {
+        let prev_body = bodys.get(tail.prev).unwrap();
+        commands.entity(tail.prev).insert((
+            Tail { prev: prev_body.prev, head: tail.head },
+        ));
+        commands.entity(entity).despawn();
+    }
 }

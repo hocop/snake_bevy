@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use crate::grid::components::*;
 
 
-#[derive(Component, Debug, PartialEq)]
+#[derive(Component, Debug, PartialEq, Clone, Copy)]
 #[component(immutable)]
 #[require(HasEaten, LocalDirection, GlobalDirection)]
 pub struct Head {
