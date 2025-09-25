@@ -9,7 +9,7 @@ pub fn grow_head(
     mut commands: Commands
 ) {
     for head in &heads {
-        head.next
+        // head.next
     }
 }
 

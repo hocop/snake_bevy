@@ -3,9 +3,18 @@ use bevy::prelude::*;
 
 #[derive(Component, Debug, PartialEq)]
 #[component(immutable)]
-#[require(HasEaten, LocalDirection)]
+#[require(HasEaten, LocalDirection, GlobalDirection)]
 pub struct Head {
     pub next: Entity,
+}
+
+#[derive(Component, Debug, PartialEq, Default)]
+pub enum GlobalDirection {
+    #[default]
+    North,
+    East,
+    South,
+    West,
 }
 
 
