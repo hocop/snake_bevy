@@ -19,9 +19,9 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .init_state::<AppState>()
 
+        .add_plugins(FrontendPlugin)
         .add_plugins(ThemesPlugin)
         .add_plugins(ActionsPlugin)
         .add_plugins(ButtonsPlugin)
-        .add_plugins(FrontendPlugin)
         .run();
 }
