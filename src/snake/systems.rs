@@ -29,7 +29,7 @@ pub fn shrink_tail(
     for (entity, tail) in &tails {
         let prev_body = bodys.get(tail.prev).unwrap();
         commands.entity(tail.prev).insert((
-            Tail { prev: prev_body.prev, head: tail.head },
+            Tail { prev: prev_body.prev },
         ));
         commands.entity(entity).despawn();
     }

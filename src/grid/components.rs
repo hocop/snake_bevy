@@ -59,6 +59,15 @@ impl GlobalDirection {
             _ => panic!()
         }
     }
+
+    pub fn opposite(&self) -> Self {
+        match self {
+            Self::North => Self::South,
+            Self::West => Self::East,
+            Self::South => Self::North,
+            Self::East => Self::West,
+        }
+    }
 }
 
 

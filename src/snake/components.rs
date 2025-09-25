@@ -26,5 +26,4 @@ pub struct Body {
 #[component(immutable)]
 pub struct Tail {
     pub prev: Entity,
-    pub head: Entity,
 }
