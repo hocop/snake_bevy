@@ -6,13 +6,6 @@ use bevy::prelude::*;
 #[component(immutable)]
 pub struct GridPos(pub UVec2);
 
-// fn wrap_add(a: u32, b: i32, m: u32) -> u32 {
-//     match b {
-//         (0..) => (a + b as u32) % m,
-//         (..0) => (a + m - b as u32) % m
-//     }
-// }
-
 fn wrap_inc(a: u32, m: u32) -> u32 {
     (a + 1) % m
 }
@@ -48,9 +41,11 @@ pub enum GlobalDirection {
 
 impl GlobalDirection {
     pub fn rotate(&self, dir: &LocalDirection) -> Self {
+        // add directions
         let a = *self as u8 as i32 + *dir as u8 as i32 - 1;
-        // wrap
-        let a = if a > 0 {a} else {a + 4};
+        // wrap around
+        let a = (a + 4) % 4;
+        // convert
         match a {
             0 => Self::North,
             1 => Self::West,
@@ -74,8 +69,51 @@ impl GlobalDirection {
 #[derive(Component, Debug, PartialEq, Default, Copy, Clone)]
 #[component(immutable)]
 pub enum LocalDirection {
-    Left,
+    // Do not change order
+    Right,
     #[default]
     Forward,
-    Right,
+    Left,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_global_direction_opposite() {
+        assert_eq!(GlobalDirection::North.opposite(), GlobalDirection::South);
+        assert_eq!(GlobalDirection::South.opposite(), GlobalDirection::North);
+        assert_eq!(GlobalDirection::East.opposite(), GlobalDirection::West);
+        assert_eq!(GlobalDirection::West.opposite(), GlobalDirection::East);
+    }
+
+    #[test]
+    fn test_local_direction_numerical() {
+        assert_eq!(LocalDirection::Forward as u8 as i32 - 1, 0);
+        assert_eq!(GlobalDirection::South as u8 as i32, 2);
+    }
+
+    #[test]
+    fn test_global_direction_rotate() {
+        // Test rotating North - these are the actual results from the implementation
+        assert_eq!(GlobalDirection::North.rotate(&LocalDirection::Left), GlobalDirection::West);
+        assert_eq!(GlobalDirection::North.rotate(&LocalDirection::Forward), GlobalDirection::North);
+        assert_eq!(GlobalDirection::North.rotate(&LocalDirection::Right), GlobalDirection::East);
+        
+        // Test rotating South
+        assert_eq!(GlobalDirection::South.rotate(&LocalDirection::Left), GlobalDirection::East);
+        assert_eq!(GlobalDirection::South.rotate(&LocalDirection::Forward), GlobalDirection::South);
+        assert_eq!(GlobalDirection::South.rotate(&LocalDirection::Right), GlobalDirection::West);
+        
+        // Test rotating East
+        assert_eq!(GlobalDirection::East.rotate(&LocalDirection::Left), GlobalDirection::North);
+        assert_eq!(GlobalDirection::East.rotate(&LocalDirection::Forward), GlobalDirection::East);
+        assert_eq!(GlobalDirection::East.rotate(&LocalDirection::Right), GlobalDirection::South);
+        
+        // Test rotating West
+        assert_eq!(GlobalDirection::West.rotate(&LocalDirection::Left), GlobalDirection::South);
+        assert_eq!(GlobalDirection::West.rotate(&LocalDirection::Forward), GlobalDirection::West);
+        assert_eq!(GlobalDirection::West.rotate(&LocalDirection::Right), GlobalDirection::North);
+    }
 }
