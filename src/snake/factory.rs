@@ -19,7 +19,8 @@ pub fn spawn_snake(
         .try_into()
         .unwrap();
 
-    commands.entity(head).insert(Head {next: body});
-    commands.entity(body).insert((Body {prev: head, next: body}, ChildOf(head)));
-    commands.entity(tail).insert((Tail {prev: body}, ChildOf(head)));
+    // snake is a cyclical linked list
+    commands.entity(head).insert((Head::default(), Body {prev: tail}));
+    commands.entity(body).insert(Body {prev: head});
+    commands.entity(tail).insert(Body {prev: body});
 }
