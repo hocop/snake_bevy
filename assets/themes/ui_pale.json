@@ -1,0 +1,22 @@
+{
+  "ground": {
+    "color_name": "Muted Grass Green",
+    "hex": "#A7D88C",
+    "notes": "Softer green to avoid eye strain and help game elements stand out"
+  },
+  "button_idle": {
+    "color_name": "Light Gray",
+    "hex": "#F0F0F0",
+    "notes": "Soft button background"
+  },
+  "button_hover": {
+    "color_name": "Sky Blue",
+    "hex": "#AED6F1",
+    "notes": "Gentle highlight on hover"
+  },
+  "button_active": {
+    "color_name": "Steel Blue",
+    "hex": "#5DADE2",
+    "notes": "Pressed state or selected button"
+  }
+}

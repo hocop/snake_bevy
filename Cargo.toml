@@ -1,0 +1,34 @@
+cargo-features = ["codegen-backend"]
+
+[package]
+name = "snake_bevy"
+version = "0.1.0"
+edition = "2021"
+
+# remove dynamic_linking when release
+[dependencies]
+bevy = {version = "0.16.1", features=["dynamic_linking", "track_location"]}
+leafwing-input-manager = "0.17.1"
+itertools = "0.14.0"
+strum = {version = "0.27.1", features=["derive"]}
+smallvec = "2.0.0-alpha.10"
+serde_json = "1.0.140"
+serde = "1.0.219"
+
+# Min optimizations for our code:
+[profile.dev]
+codegen-units = 16
+opt-level = 0
+codegen-backend = "cranelift"
+
+
+# Max optimizations for dependencies
+[profile.dev.package."*"]
+opt-level = 3
+codegen-backend = "llvm"
+
+
+[profile.release]
+lto = true
+codegen-units = 1
+codegen-backend = "llvm"
