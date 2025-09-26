@@ -25,19 +25,3 @@ impl SimpleButton {
         Self {action}
     }
 }
-
-// ================== Multiple choice ==================
-#[derive(Component, Debug)]
-#[require(Button, ButtonStyle)]
-pub struct MultipleChoice<T> {
-    pub choice: T
-}
-
-
-// ================== Toggle ==================
-#[derive(Component, PartialEq, Eq, Hash, Clone, Copy, Debug, Reflect)]
-#[require(Button, ButtonStyle)]
-pub enum Toggle {
-    FastForward,
-    SomeOtherToggle, // Add more toggles as needed
-}

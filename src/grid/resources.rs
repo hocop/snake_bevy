@@ -55,10 +55,6 @@ impl Grid {
     fn pos_to_i(&self, pos: &UVec2) -> usize {
         pos.x as usize + self.size.x as usize * pos.y as usize
     }
-
-    fn i_to_pos(&self, i: usize) -> UVec2 {
-        UVec2::new((i % self.size.y as usize) as u32, (i / self.size.y as usize) as u32)
-    }
 }
 
 
@@ -66,12 +62,16 @@ impl Grid {
 mod tests {
     use super::*;
 
+    fn i_to_pos(grid: &Grid, i: usize) -> UVec2 {
+        UVec2::new((i % grid.size.y as usize) as u32, (i / grid.size.y as usize) as u32)
+    }
+
     #[test]
     fn test_index() {
         let grid = Grid::default();
 
         for i in 0..256 {
-            assert_eq!(i, grid.pos_to_i(&grid.i_to_pos(i)));
+            assert_eq!(i, grid.pos_to_i(&i_to_pos(&grid, i)));
         }
     }
 }

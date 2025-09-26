@@ -3,15 +3,11 @@ use bevy::prelude::*;
 use crate::{actions::ControlSet, buttons::resources::AnyButtonHovered};
 
 pub mod components;
-pub mod toggle;
-pub mod choice;
 pub mod systems;
 pub mod resources;
 pub mod simple;
 
 use systems::*;
-use choice::*;
-use toggle::*;
 use simple::*;
 
 
@@ -35,9 +31,6 @@ impl Plugin for ButtonsPlugin {
 
             // Add simple buttons
             .add_plugins(SimplePlugin)
-            // Add toggles
-            .add_plugins(TogglePlugin)
-            // Add all multiple choices
         ;
     }
 }
