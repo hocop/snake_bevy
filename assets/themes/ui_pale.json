@@ -1,7 +1,7 @@
 {
   "ground": {
     "color_name": "Muted Grass Green",
-    "hex": "#A7D88C",
+    "hex": "#444444",
     "notes": "Softer green to avoid eye strain and help game elements stand out"
   },
   "button_idle": {

@@ -1,13 +1,14 @@
 use bevy::prelude::*;
 use leafwing_input_manager::prelude::*;
 
-use crate::{actions::HUDAction, buttons::components::SimpleButton};
+use crate::{actions::HUDAction, buttons::components::SimpleButton, ui::view::play::build_play};
 
 use super::components::*;
 use crate::app_state::AppState;
 
 
 mod menu;
+mod play;
 
 use menu::*;
 
@@ -20,7 +21,7 @@ pub fn ui_view_system(
     // Only rebuild when state changed
     let view = match current_state.get() {
         AppState::Menu => commands.spawn(build_menu()),
-        AppState::Play => commands.spawn(()),
+        AppState::Play => commands.spawn(build_play()),
     }.id();
     commands.entity(view).insert(UIRoot {});
 }
