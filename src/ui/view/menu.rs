@@ -18,8 +18,6 @@ pub fn build_menu() -> impl Bundle {
         children![
             // Play button
             menu_button("Play", HUDAction::EnterLevel),
-            // Settings button
-            menu_button("Settings", HUDAction::Placeholder),
             // Exit button
             menu_button("Exit", HUDAction::ExitGame),
         ]

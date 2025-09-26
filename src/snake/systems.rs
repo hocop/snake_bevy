@@ -1,18 +1,27 @@
 use bevy::prelude::*;
 use leafwing_input_manager::prelude::*;
 
-use crate::{actions::HUDAction, grid::{components::*, Grid}, snake::components::*};
+use crate::{actions::HUDAction, food::Food, grid::{components::*, Grid}, snake::components::*};
+
+
+pub fn snake_steer(
+    mut heads: Query<(&mut GlobalDirection, &LocalDirection), With<Head>>,
+) {
+    for (mut dir, ldir) in &mut heads {
+        // Compute new head position
+        *dir = dir.rotate(ldir);
+    }
+}
+
 
 pub fn snake_step(
-    heads: Query<(Entity, &Head, &Body, &GridPos, &GlobalDirection, &LocalDirection)>,
+    heads: Query<(Entity, &Head, &Body, &GridPos, &GlobalDirection)>,
     grid: Res<Grid>,
     mut commands: Commands
 ) {
     let size = grid.size;
 
-    for (entity, head, body, pos, dir, ldir) in &heads {
-        // Compute new head position
-        let dir = &dir.rotate(ldir);
+    for (entity, head, body, pos, dir) in &heads {
         let new_pos = pos.shift(dir, size);
 
         // Do a cyclic shift
@@ -40,42 +49,27 @@ pub fn snake_step(
 
 
 pub fn snake_eat(
-    heads: Query<(Entity, &Head, &Body, &GridPos, &GlobalDirection, &LocalDirection)>,
+    mut heads: Query<(&mut Head, &GridPos, &GlobalDirection)>,
     grid: Res<Grid>,
+    foods: Query<&Food>,
     mut commands: Commands
 ) {
     let size = grid.size;
 
-    for (entity, head, body, pos, dir, ldir) in &heads {
-        // Compute new head position
-        let dir = &dir.rotate(ldir);
+    for (mut head, pos, dir) in heads.iter_mut() {
+        // check the cell in front of the head
         let new_pos = pos.shift(dir, size);
-
-        // Do a cyclic shift
-        // Old head stops being head, steering is reset
-        commands.entity(entity)
-            .remove::<Head>()
-            .insert(LocalDirection::default());
-
-        if head.has_eaten {
-            // New head appears
-            let new_head = commands.spawn((
-                Head::default(),
-                Body {prev: body.prev},
-                new_pos,
-                *dir
-            )).id();
-            // Old head starts pointing at the new head
-            commands.entity(entity).insert(Body {prev: new_head});
-        } else {
-            // Tail becomes new head
-            commands.entity(body.prev).insert((Head::default(), new_pos, *dir));
+        if let Some(food) = grid.get(&new_pos) {
+            if foods.get(food).is_ok() {
+                head.has_eaten = true;
+                commands.entity(food).despawn();
+            }
         }
     }
 }
 
 
-pub fn steer_snake(
+pub fn snake_process_controls(
     action_state: Res<ActionState<HUDAction>>,
     mut heads: Query<&mut LocalDirection, With<Head>>,
 ) {

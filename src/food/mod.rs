@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{grid::{components::GridPos, Grid}, rng::RandomSource};
+use crate::{grid::Grid, rng::RandomSource};
 
 pub struct FoodPlugin;
 
@@ -40,11 +40,11 @@ pub fn add_sprite_food(
     commands.entity(trigger.target()).insert(InheritedVisibility::default());
 
     // Create a marker entity with a circle shape and a color
-    let shape = meshes.add(Circle::new(0.45));
+    let shape = meshes.add(Circle::new(0.5));
 
     commands.spawn((
         Mesh2d(shape),
-        MeshMaterial2d(materials.add(Color::srgb(0.0, 1.0, 0.0))),
+        MeshMaterial2d(materials.add(Color::srgb(0.8, 0.8, 0.0))),
         ChildOf(trigger.target()),
     ));
 }

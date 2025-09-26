@@ -11,6 +11,9 @@ pub fn app_state_contol(
     if action_state.just_pressed(&HUDAction::ToMenu) {
         next_state.set(AppState::Menu);
     }
+    if action_state.just_pressed(&HUDAction::EnterLevel) {
+        next_state.set(AppState::Play);
+    }
 }
 
 pub fn print_state_change(

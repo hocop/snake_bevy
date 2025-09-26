@@ -13,6 +13,8 @@ impl Plugin for GameLoopPlugin {
         app
             .insert_resource(Time::<Fixed>::from_duration(Duration::from_secs(1)))
             .add_systems(FixedUpdate, (
+                snake_steer,
+                snake_eat,
                 snake_step,
                 spawn_food,
             ).chain())

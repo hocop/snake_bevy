@@ -3,6 +3,7 @@ use core::panic;
 use bevy::prelude::*;
 
 #[derive(Component, Deref, Copy, Clone)]
+#[require(Transform)]
 #[component(immutable)]
 pub struct GridPos(pub UVec2);
 

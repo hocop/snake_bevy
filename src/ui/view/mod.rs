@@ -16,7 +16,6 @@ use menu::*;
 pub fn ui_view_system(
     current_state: Res<State<AppState>>,
     mut commands: Commands,
-    asset_server: Res<AssetServer>,
 ) {
     // Only rebuild when state changed
     let view = match current_state.get() {
@@ -24,11 +23,6 @@ pub fn ui_view_system(
         AppState::Play => commands.spawn(()),
     }.id();
     commands.entity(view).insert(UIRoot {});
-}
-
-
-fn horizontal_spacer() -> Node {
-    Node {  width: Val::Px(5.), ..default() }
 }
 
 
