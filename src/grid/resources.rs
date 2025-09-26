@@ -26,6 +26,12 @@ impl Grid {
         self.index[i] = value;
     }
 
+    pub fn aabb(&self) -> (Vec2, Vec2) {
+        let min = Vec2::new(-0.5, -0.5);
+        let max = Vec2::new(self.size.x as f32 - 0.5, self.size.y as f32 - 0.5);
+        (min, max)
+    }
+
     fn pos_to_i(&self, pos: &UVec2) -> usize {
         pos.x as usize + self.size.x as usize * pos.y as usize
     }

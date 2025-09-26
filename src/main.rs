@@ -1,7 +1,7 @@
 #![feature(trait_alias)]
 use bevy::prelude::*;
 
-use crate::{actions::ActionsPlugin, app_state::AppState, buttons::ButtonsPlugin, grid::GridPlugin, snake::SnakePlugin, themes::ThemesPlugin, ui::FrontendPlugin};
+use crate::{actions::ActionsPlugin, app_state::AppState, buttons::ButtonsPlugin, grid::{Grid, GridPlugin}, snake::{spawn_snake, SnakePlugin}, themes::ThemesPlugin, ui::FrontendPlugin};
 
 mod ui;
 mod buttons;
@@ -25,15 +25,26 @@ fn main() {
         .add_plugins(SnakePlugin)
 
         .add_systems(Startup, (
-                setup_camera,  // Setup the camera after
-            ))
+                setup_camera,
+                move_camera_to_overview,
+                setup_scene,
+            ).chain())
         .run();
 }
 
 
 const PIXELS_PER_METER: f32 = 16.0;
 
-pub fn setup_camera(mut commands: Commands) {
+pub fn setup_scene(
+    grid: Res<Grid>,
+    mut commands: Commands,
+) {
+    spawn_snake(grid.size / 2, &grid, &mut commands);
+}
+
+pub fn setup_camera(
+    mut commands: Commands,
+) {
     commands.spawn((
         Camera2d {},
         Projection::Orthographic(OrthographicProjection {
@@ -42,4 +53,50 @@ pub fn setup_camera(mut commands: Commands) {
             ..OrthographicProjection::default_2d()
         }),
     ));
+}
+
+pub fn move_camera_to_overview(
+    mut camera_pos: Query<&mut Transform, With<Camera>>,
+    mut camera_proj: Query<&mut Projection, With<Camera>>,
+    window_query: Query<&Window>,
+    grid: Res<Grid>
+) -> Result<(), BevyError> {
+    // Find AABB
+    let (min, max) = grid.aabb();
+
+    // Position camera
+    let mid = min.midpoint(max);
+    camera_pos.single_mut()?.translation = Vec3::new(mid.x, mid.y, 0.0);
+
+    // Set scale
+    let Vec2 { x: w, y: h } = max - min;
+    let window = window_query.single()?;
+    let scale = f32::max(
+        h / window.height(),
+        w / window.width()
+    );
+    change_scale(
+        &mut camera_proj,
+        |_| scale
+    )?;
+
+    Ok(())
+}
+
+pub fn change_scale<S>(
+    camera_proj: &mut Query<&mut Projection, With<Camera>>,
+    new_scale: S
+) -> Result<(), BevyError>
+where S: Fn(f32) -> f32,
+{
+    match camera_proj.single()? {
+        Projection::Orthographic(projection) => {
+            *camera_proj.single_mut()? = Projection::Orthographic(OrthographicProjection {
+                scale: new_scale(projection.scale),
+                ..*projection
+            });
+        },
+        _ => { todo!() }
+    };
+    Ok(())
 }

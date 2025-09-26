@@ -33,3 +33,22 @@ pub fn snake_step(
         }
     }
 }
+
+
+pub fn add_sprite(
+    trigger: Trigger<OnInsert, Body>,
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
+) {
+    commands.entity(trigger.target()).insert(InheritedVisibility::default());
+
+    // Create a marker entity with a circle shape and a color
+    let shape = meshes.add(Circle::new(0.5));
+
+    commands.spawn((
+        Mesh2d(shape),
+        MeshMaterial2d(materials.add(Color::BLACK)),
+        ChildOf(trigger.target()),
+    ));
+}

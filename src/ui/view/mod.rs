@@ -21,7 +21,7 @@ pub fn ui_view_system(
     // Only rebuild when state changed
     let view = match current_state.get() {
         AppState::Menu => commands.spawn(build_menu()),
-        AppState::Play => todo!()
+        AppState::Play => commands.spawn(()),
     }.id();
     commands.entity(view).insert(UIRoot {});
 }
