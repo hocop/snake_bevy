@@ -1,7 +1,7 @@
 #![feature(trait_alias)]
 use bevy::prelude::*;
 
-use crate::{actions::ActionsPlugin, app_state::AppState, buttons::ButtonsPlugin, food::FoodPlugin, game_loop::GameLoopPlugin, grid::{Grid, GridPlugin}, rng::RngPlugin, snake::{spawn_snake, SnakePlugin}, themes::ThemesPlugin, ui::FrontendPlugin};
+use crate::{actions::ActionsPlugin, app_state::AppState, buttons::ButtonsPlugin, food::{Food, FoodPlugin}, game_loop::GameLoopPlugin, grid::{Grid, GridPlugin}, rng::RngPlugin, snake::{spawn_snake, Body, SnakePlugin}, themes::ThemesPlugin, ui::FrontendPlugin};
 
 mod ui;
 mod buttons;
@@ -32,16 +32,13 @@ fn main() {
 
         .add_systems(Startup, (
             setup_camera,
-            stop_time
         ))
         .add_systems(OnEnter(AppState::Play), (
             move_camera_to_overview,
             setup_scene,
-            start_time,
         ).chain())
         .add_systems(OnExit(AppState::Play), (
             despawn_scene,
-            stop_time,
         ).chain())
         .run();
 }
@@ -113,4 +110,17 @@ where S: Fn(f32) -> f32,
         _ => { todo!() }
     };
     Ok(())
+}
+
+
+
+// Implement despawn_scene system
+pub fn despawn_scene(
+    mut commands: Commands,
+    snake: Query<Entity, With<Body>>,
+    food: Query<Entity, With<Food>>,
+) {
+    for entity in snake.iter().chain(food.iter()) {
+        commands.entity(entity).try_despawn();
+    }
 }

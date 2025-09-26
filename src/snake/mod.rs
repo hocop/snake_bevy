@@ -6,6 +6,7 @@ mod factory;
 
 pub use systems::*;
 pub use factory::*;
+pub use components::*;
 
 
 pub struct SnakePlugin;
