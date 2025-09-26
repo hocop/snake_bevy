@@ -11,6 +11,11 @@ It doesn't follow any tutorial in particular, rather my own (little) experience 
 - Modular architecture
 - You cannot die (to be implemented)
 
+Gameplay             |  Menu
+:-------------------------:|:-------------------------:
+![Gameplay](screenshots/gameplay.png) | ![Menu](screenshots/menu.png)
+
+
 ## Installation
 
 1. Install Rust via [rustup](https://rustup.rs/)
