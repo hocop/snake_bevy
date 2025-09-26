@@ -1,7 +1,7 @@
 #![feature(trait_alias)]
 use bevy::prelude::*;
 
-use crate::{actions::ActionsPlugin, app_state::AppState, buttons::ButtonsPlugin, grid::{Grid, GridPlugin}, snake::{spawn_snake, SnakePlugin}, themes::ThemesPlugin, ui::FrontendPlugin};
+use crate::{actions::ActionsPlugin, app_state::AppState, buttons::ButtonsPlugin, food::FoodPlugin, game_loop::GameLoopPlugin, grid::{Grid, GridPlugin}, rng::RngPlugin, snake::{spawn_snake, SnakePlugin}, themes::ThemesPlugin, ui::FrontendPlugin};
 
 mod ui;
 mod buttons;
@@ -10,6 +10,9 @@ mod actions;
 mod grid;
 mod themes;
 mod snake;
+mod food;
+mod game_loop;
+mod rng;
 
 
 fn main() {
@@ -23,6 +26,9 @@ fn main() {
         .add_plugins(ButtonsPlugin)
         .add_plugins(GridPlugin)
         .add_plugins(SnakePlugin)
+        .add_plugins(GameLoopPlugin)
+        .add_plugins(FoodPlugin)
+        .add_plugins(RngPlugin)
 
         .add_systems(Startup, (
                 setup_camera,

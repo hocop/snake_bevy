@@ -1,4 +1,7 @@
 use bevy::prelude::*;
+use rand::{distr::Uniform, Rng};
+
+use crate::{grid::components::GridPos, rng::RandomSource};
 
 #[derive(Resource)]
 pub struct Grid {
@@ -30,6 +33,23 @@ impl Grid {
         let min = Vec2::new(-0.5, -0.5);
         let max = Vec2::new(self.size.x as f32 - 0.5, self.size.y as f32 - 0.5);
         (min, max)
+    }
+
+    pub fn random_unoccupied_pos(&self, rng: &mut RandomSource) -> GridPos {
+        let mut unoccupied_positions = Vec::new();
+        for y in 0..self.size.y {
+            for x in 0..self.size.x {
+                let pos = UVec2::new(x, y);
+                if self.get(&pos).is_none() {
+                    unoccupied_positions.push(pos);
+                }
+            }
+        }
+        if unoccupied_positions.is_empty() {
+            panic!("No unoccupied positions found");
+        }
+        let i = rng.0.sample(Uniform::new(0, unoccupied_positions.len()).unwrap());
+        GridPos(unoccupied_positions[i])
     }
 
     fn pos_to_i(&self, pos: &UVec2) -> usize {
