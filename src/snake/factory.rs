@@ -19,7 +19,7 @@ pub fn spawn_snake(
         .try_into()
         .unwrap();
 
-    // snake is a cyclical linked list
+    // snake is a circular linked list
     commands.entity(head).insert((Head::default(), Body {prev: tail}));
     commands.entity(body).insert(Body {prev: head});
     commands.entity(tail).insert(Body {prev: body});

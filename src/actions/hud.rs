@@ -1,8 +1,6 @@
 use bevy::prelude::*;
 use leafwing_input_manager::prelude::*;
 
-use crate::buttons::components::Toggle;
-
 
 #[derive(Actionlike, PartialEq, Eq, Hash, Clone, Copy, Debug, Reflect)]
 pub enum HUDAction {
@@ -13,16 +11,9 @@ pub enum HUDAction {
     ToMenu,
     ExitGame,
 
-    // Inside editor
-    Clean,
-
     // In game
-    StartSim,
-    StopSim,
-    Toggle(Toggle),
-
-    // Actions emitted by the simulation
-    MissingPaths,
+    GoLeft,
+    GoRight,
 }
 
 
@@ -30,6 +21,9 @@ impl HUDAction {
     pub fn default_control_map() -> InputMap<HUDAction> {
         InputMap::default()
             .with(HUDAction::ExitGame, KeyCode::KeyQ)
+            .with(HUDAction::ToMenu, KeyCode::Escape)
+            .with(HUDAction::GoLeft, KeyCode::ArrowLeft)
+            .with(HUDAction::GoRight, KeyCode::ArrowRight)
     }
 }
 

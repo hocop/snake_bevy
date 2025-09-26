@@ -1,21 +1,23 @@
 use bevy::prelude::*;
+use leafwing_input_manager::prelude::*;
 
-use crate::{grid::{components::*, Grid}, snake::components::*};
+use crate::{actions::HUDAction, grid::{components::*, Grid}, snake::components::*};
 
 pub fn snake_step(
-    heads: Query<(Entity, &Head, &Body, &GridPos, &GlobalDirection)>,
+    heads: Query<(Entity, &Head, &Body, &GridPos, &GlobalDirection, &LocalDirection)>,
     grid: Res<Grid>,
     mut commands: Commands
 ) {
     let size = grid.size;
 
-    for (entity, head, body, pos, dir) in &heads {
+    for (entity, head, body, pos, dir, ldir) in &heads {
         // Compute new head position
+        let dir = &dir.rotate(ldir);
         let new_pos = pos.shift(dir, size);
 
         // Do a cyclic shift
-        // Old head stops being head
-        commands.entity(entity).remove::<Head>();
+        // Old head stops being head, steering is reset
+        commands.entity(entity).remove::<Head>().insert(LocalDirection::default());
 
         if head.has_eaten {
             // New head appears
@@ -30,6 +32,23 @@ pub fn snake_step(
         } else {
             // Tail becomes new head
             commands.entity(body.prev).insert((Head::default(), new_pos, *dir));
+        }
+    }
+}
+
+
+pub fn steer_snake(
+    action_state: Res<ActionState<HUDAction>>,
+    mut heads: Query<&mut LocalDirection, With<Head>>,
+) {
+    let new_dir = if action_state.just_pressed(&HUDAction::GoLeft) {
+        Some(LocalDirection::Left)
+    } else if action_state.just_pressed(&HUDAction::GoRight) {
+        Some(LocalDirection::Right)
+    } else { None };
+    if let Some(new_dir) = new_dir {
+        for mut dir in heads.iter_mut() {
+            *dir = new_dir;
         }
     }
 }

@@ -31,6 +31,7 @@ impl GridPos {
 }
 
 #[derive(Component, Debug, PartialEq, Default, Copy, Clone)]
+#[require(LocalDirection)]
 pub enum GlobalDirection {
     #[default]
     North,
@@ -76,7 +77,6 @@ impl GlobalDirection {
 
 
 #[derive(Component, Debug, PartialEq, Default, Copy, Clone)]
-#[component(immutable)]
 pub enum LocalDirection {
     // Do not change order
     Right,

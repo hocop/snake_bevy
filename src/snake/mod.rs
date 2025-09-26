@@ -17,6 +17,7 @@ impl Plugin for SnakePlugin {
             .insert_resource(Time::<Fixed>::from_duration(Duration::from_secs(1)))
             .add_observer(add_sprite)
             .add_systems(FixedUpdate, snake_step)
+            .add_systems(Update, steer_snake)
         ;
     }
 }
