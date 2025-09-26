@@ -31,10 +31,18 @@ fn main() {
         .add_plugins(RngPlugin)
 
         .add_systems(Startup, (
-                setup_camera,
-                move_camera_to_overview,
-                setup_scene,
-            ).chain())
+            setup_camera,
+            stop_time
+        ))
+        .add_systems(OnEnter(AppState::Play), (
+            move_camera_to_overview,
+            setup_scene,
+            start_time,
+        ).chain())
+        .add_systems(OnExit(AppState::Play), (
+            despawn_scene,
+            stop_time,
+        ).chain())
         .run();
 }
 
