@@ -10,9 +10,9 @@ It doesn't follow any tutorial in particular, rather my own (little) experience 
 - [ELM](https://guide.elm-lang.org/architecture) style UI with theme support
 - Modular architecture
 
-Gameplay             |  Menu
-:-------------------------:|:-------------------------:
-![Gameplay](screenshots/gameplay.png) | ![Menu](screenshots/menu.png)
+Menu | Gameplay | Game Over
+:-------------------------:|:-------------------------:|:-------------------------:
+![Gameplay](screenshots/menu.png) | ![Menu](screenshots/gameplay.png) | ![Game Over](screenshots/game_over.png)
 
 
 ## Installation
