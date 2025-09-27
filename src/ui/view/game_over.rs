@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 
-use crate::{actions::HUDAction, ui::elements::menu_button};
+use crate::{actions::HUDAction, food::SnakeStats, ui::elements::menu_button};
 
 
-pub fn build_game_over() -> impl Bundle {
+pub fn build_game_over(stats: &SnakeStats) -> impl Bundle {
     // Main column
     (
         Node {
@@ -17,6 +17,7 @@ pub fn build_game_over() -> impl Bundle {
         },
         children![
             Text("Game Over!".into()),
+            Text(format!("Score: {}", stats.eaten)),
             // Menu button
             menu_button("Menu", HUDAction::ToMenu),
         ]

@@ -35,7 +35,7 @@ impl Grid {
         (min, max)
     }
 
-    pub fn random_unoccupied_pos(&self, rng: &mut RandomSource) -> GridPos {
+    pub fn random_unoccupied_pos(&self, rng: &mut RandomSource) -> Option<GridPos> {
         let mut unoccupied_positions = Vec::new();
         for y in 0..self.size.y {
             for x in 0..self.size.x {
@@ -46,10 +46,11 @@ impl Grid {
             }
         }
         if unoccupied_positions.is_empty() {
-            panic!("No unoccupied positions found");
+            None
+        } else {
+            let i = rng.0.sample(Uniform::new(0, unoccupied_positions.len()).unwrap());
+            Some(GridPos(unoccupied_positions[i]))
         }
-        let i = rng.0.sample(Uniform::new(0, unoccupied_positions.len()).unwrap());
-        GridPos(unoccupied_positions[i])
     }
 
     fn pos_to_i(&self, pos: &UVec2) -> usize {

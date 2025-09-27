@@ -42,15 +42,6 @@ pub enum GlobalDirection {
 }
 
 impl GlobalDirection {
-    pub fn to_rotation(&self) -> Quat {
-        match self {
-           Self::North => Quat::from_rotation_z(0.0),
-           Self::West => Quat::from_rotation_z(std::f32::consts::PI / 2.0),
-           Self::South => Quat::from_rotation_z(std::f32::consts::PI),
-           Self::East => Quat::from_rotation_z(std::f32::consts::PI * 3.0 / 2.0),
-        }
-    }
-
     pub fn rotate(&self, dir: &LocalDirection) -> Self {
         // add directions
         let a = *self as u8 as i32 + *dir as u8 as i32 - 1;

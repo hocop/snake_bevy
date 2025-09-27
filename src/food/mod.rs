@@ -7,8 +7,10 @@ pub struct FoodPlugin;
 impl Plugin for FoodPlugin {
     fn build(&self, app: &mut App) {
         app
+            .init_resource::<SnakeStats>()
             .add_systems(FixedUpdate, spawn_food)
             .add_observer(add_sprite_food)
+            .add_observer(increase_score)
         ;
     }
 }
@@ -20,16 +22,30 @@ pub fn spawn_food(
     grid: Res<Grid>,
 ) {
     if query.is_empty() {
-        commands.spawn((
-            Food {},
-            grid.random_unoccupied_pos(&mut random_source),
-        ));
+        if let Some(pos) = grid.random_unoccupied_pos(&mut random_source) {
+            commands.spawn((
+                Food {},
+                pos,
+            ));
+        }
     }
 }
+
+pub fn increase_score(
+    _trigger: Trigger<OnRemove, Food>,
+    mut stats: ResMut<SnakeStats>
+) {
+    stats.eaten += 1;
+}
+
 
 #[derive(Component)]
 pub struct Food {}
 
+#[derive(Resource, Default)]
+pub struct SnakeStats {
+    pub eaten: u32,
+}
 
 pub fn add_sprite_food(
     trigger: Trigger<OnAdd, Food>,

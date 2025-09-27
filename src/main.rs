@@ -1,7 +1,7 @@
 #![feature(trait_alias)]
 use bevy::prelude::*;
 
-use crate::{actions::ActionsPlugin, app_state::AppState, buttons::ButtonsPlugin, food::{Food, FoodPlugin}, game_loop::GameLoopPlugin, grid::{Grid, GridPlugin}, rng::RngPlugin, snake::{spawn_snake, Body, SnakePlugin}, themes::ThemesPlugin, ui::FrontendPlugin};
+use crate::{actions::ActionsPlugin, app_state::AppState, buttons::ButtonsPlugin, food::FoodPlugin, game_loop::GameLoopPlugin, grid::GridPlugin, rng::RngPlugin, snake::SnakePlugin, themes::ThemesPlugin, ui::FrontendPlugin};
 
 mod ui;
 mod buttons;
