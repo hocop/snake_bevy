@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use leafwing_input_manager::prelude::*;
 
-use crate::{actions::HUDAction, buttons::components::SimpleButton, ui::view::play::build_play};
+use crate::{actions::HUDAction, buttons::components::SimpleButton, ui::view::{game_over::build_game_over, play::build_play}};
 
 use super::components::*;
 use crate::app_state::AppState;
@@ -9,6 +9,7 @@ use crate::app_state::AppState;
 
 mod menu;
 mod play;
+mod game_over;
 
 use menu::*;
 
@@ -22,6 +23,7 @@ pub fn ui_view_system(
     let view = match current_state.get() {
         AppState::Menu => commands.spawn(build_menu()),
         AppState::Play => commands.spawn(build_play()),
+        AppState::GameOver => commands.spawn(build_game_over()),
     }.id();
     commands.entity(view).insert(UIRoot {});
 }

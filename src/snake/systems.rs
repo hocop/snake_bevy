@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use leafwing_input_manager::prelude::*;
 
-use crate::{actions::HUDAction, food::Food, grid::{components::*, Grid}, snake::components::*};
+use crate::{actions::HUDAction, app_state::AppState, food::Food, grid::{components::*, Grid}, snake::components::*};
 
 
 pub fn snake_steer(
@@ -49,20 +49,28 @@ pub fn snake_step(
 
 
 pub fn snake_eat(
-    mut heads: Query<(&mut Head, &GridPos, &GlobalDirection)>,
+    mut heads: Query<(Entity, &mut Head, &Body, &GridPos, &GlobalDirection)>,
     grid: Res<Grid>,
     foods: Query<&Food>,
-    mut commands: Commands
+    bodys: Query<(), With<Body>>,
+    mut commands: Commands,
+    mut app_state: ResMut<NextState<AppState>>,
 ) {
     let size = grid.size;
 
-    for (mut head, pos, dir) in heads.iter_mut() {
+    for (entity, mut head, body, pos, dir) in heads.iter_mut() {
         // check the cell in front of the head
         let new_pos = pos.shift(dir, size);
-        if let Some(food) = grid.get(&new_pos) {
-            if foods.get(food).is_ok() {
+        if let Some(cell_in_front) = grid.get(&new_pos) {
+            if foods.get(cell_in_front).is_ok() {
+                // Food is eaten, grow the snake
                 head.has_eaten = true;
-                commands.entity(food).despawn();
+                commands.entity(cell_in_front).despawn();
+            }
+            if body.prev != cell_in_front && bodys.get(cell_in_front).is_ok() {
+                // Snake eats itself, game over
+                app_state.set(AppState::GameOver);
+                commands.entity(entity).remove::<Head>();
             }
         }
     }

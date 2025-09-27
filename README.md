@@ -7,9 +7,8 @@ It doesn't follow any tutorial in particular, rather my own (little) experience 
 ## Features
 
 - Classic Snake gameplay
-- ELM-style UI with theme support
+- [ELM](https://guide.elm-lang.org/architecture) style UI with theme support
 - Modular architecture
-- You cannot die (to be implemented)
 
 Gameplay             |  Menu
 :-------------------------:|:-------------------------:
